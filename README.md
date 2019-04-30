@@ -44,5 +44,6 @@ python csgd_standalone.py eval dc40_csgd1_itr0_prunedweights.hdf5
 ```
 
 ## Contact
-dxh17 at mails.tsinghua.edu.cn
+dxh17@mails.tsinghua.edu.cn
+
 Google Scholar Profile: https://scholar.google.com/citations?user=CIjw0KoAAAAJ&hl=en
