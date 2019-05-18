@@ -1,5 +1,7 @@
 # Centripetal-SGD
 
+NOTE! I found out that the data preprocessing pipeline I used in these codes was not compatible with the tfrecords produced by the slim codes. This repository will be updated after the NeurIPS deadline.
+
 This repository contains the codes for the following CVPR-2019 paper 
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](https://arxiv.org/abs/1904.03837).
