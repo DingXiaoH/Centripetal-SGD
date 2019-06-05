@@ -76,7 +76,7 @@ def _produce_magnitude_equivalent_eqcls(target_deps, save_path):
 
 def compare_magnitude(prefix):
     pruned = 'dc40_{}_prunedweights.hdf5'.format(prefix)
-    target_deps = customized_dc40_deps('3-3-3')
+    target_deps = TARGET_DEPS
     save_hdf5 = '{}_trained.hdf5'.format(prefix)
     equivalent_eqcls_path = 'dc40_equivalent_eqcls_{}.npy'.format(prefix)
     if not os.path.exists(pruned):
@@ -92,7 +92,7 @@ def compare_magnitude(prefix):
         del prune_model
 
     builder = DC40Builder(True, deps=target_deps)
-    model = TFModel(CIFAR10Data('train'), builder.build, 'eval', batch_size=BATCH_SIZE, image_size=32,
+    model = TFModel(CIFAR10Data('train'), builder.build, 'eval', batch_size=BATCH_SIZE, image_size=32,  #TODO eval?
         l2_factor=DC40_L2_FACTOR, deps=target_deps)
     lr = model.get_piecewise_lr(values=LR_VALUES, boundaries_epochs=LR_BOUNDARIES)
     optimizer = tf.train.MomentumOptimizer(lr, momentum=0.9, use_nesterov=True)
@@ -110,3 +110,5 @@ if __name__ == '__main__':
         compare_magnitude(prefix)
     elif prefix == 'eval':
         eval_model(sys.argv[2])
+    else:
+        assert False

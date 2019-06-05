@@ -94,6 +94,8 @@ class DC40Builder(ModelBuilder):
                 l = self._avgpool(l, 2)
             return l
 
+        # tf.summary.image('input-image', img_input)
+
         l = conv(img_input, self.deps[0], 1, 'conv0')
         with tf.variable_scope('stage1') as scope:
             for i in range(self.N):

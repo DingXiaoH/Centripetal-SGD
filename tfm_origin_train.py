@@ -127,6 +127,7 @@ def train(model, train_dir, optimizer, max_epochs_per_gpu=None, max_steps_per_gp
         # Create a saver.
         saver = tf.train.Saver(tf.global_variables())
 
+        # summaries = tf.get_collection(tf.GraphKeys.SUMMARIES)   #TODO
         summary_op = tf.summary.merge(summaries)
 
         model.initialize()

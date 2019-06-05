@@ -11,6 +11,13 @@ CIFAR10_MODES = ['train', 'eval']
 
 INPUT_QUEUE_MEMORY_FACTOR=16
 
+
+def normalized_image(images):
+    # Rescale from [0, 255] to [0, 2]
+    images = tf.multiply(images, 1. / 127.5)
+    # Rescale to [-1, 1]
+    return tf.subtract(images, 1.0)
+
 class ImagePreprocessor(object):
 
     def __init__(self, mode, dataset, image_size, batch_size, num_preprocess_threads=4, num_readers=None):
@@ -132,29 +139,36 @@ class CIFAR10Preprocessor(ImagePreprocessor):
         image = tf.image.random_flip_left_right(image)
         return image
 
-    def cifar10_parse_example_proto(self, example_serialized):
-        features = tf.parse_single_example(
-            example_serialized,
-            features={
-                'image': tf.FixedLenFeature([], tf.string),
-                'label': tf.FixedLenFeature([], tf.int64),
-            })
-        label = tf.cast(features['label'], dtype=tf.int32)
-        image = tf.decode_raw(features['image'], tf.uint8)
-        image.set_shape([3 * self.image_size * self.image_size])
-        # CHW -> HWC
-        image = tf.cast(tf.transpose(tf.reshape(image, [3, self.image_size, self.image_size]), [1, 2, 0]), tf.float32)
 
-        red, green, blue = tf.split(value=image, num_or_size_splits=[1, 1, 1], axis=2)
-        image = tf.concat(values=[
-            blue - CIFAR10_MEAN[0],
-            green - CIFAR10_MEAN[1],
-            red - CIFAR10_MEAN[2],
-        ], axis=2)
+    def cifar10_parse_example_proto(self, example_serialized):
+        feature_map = {
+            'image/encoded': tf.FixedLenFeature([], dtype=tf.string,
+                default_value=''),
+            'image/class/label': tf.FixedLenFeature([1], dtype=tf.int64,
+                default_value=-1)
+        }
+        features = tf.parse_single_example(example_serialized, feature_map)
+        image_buffer = features['image/encoded']
+        label = tf.cast(features['image/class/label'], dtype=tf.int32)
+
+        image = tf.image.decode_jpeg(image_buffer, channels=3, dct_method='INTEGER_FAST')
+        image = tf.cast(image, tf.float32)
+        image = tf.image.resize_image_with_crop_or_pad(image, 32, 32)
+
+        # CHW -> HWC
+        # image = tf.cast(tf.transpose(tf.reshape(image, [3, self.image_size, self.image_size]), [1, 2, 0]), tf.float32)
+
+        # red, green, blue = tf.split(value=image, num_or_size_splits=[1, 1, 1], axis=2)
+        # image = tf.concat(values=[
+        #     blue - CIFAR10_MEAN[0],
+        #     green - CIFAR10_MEAN[1],
+        #     red - CIFAR10_MEAN[2],
+        # ], axis=2)
 
         if self.mode == 'train':
             print('distort image')
             image = self.cifar10_distort(image)
 
         # image = tf.subtract(image, tf.constant(np.array(CIFAR10_MEAN, dtype=np.float32), dtype=tf.float32))
+        image = normalized_image(image)
         return image, label
