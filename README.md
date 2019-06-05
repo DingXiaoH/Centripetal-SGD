@@ -25,7 +25,7 @@ loss, thus no finetuning is needed. By doing so, we have partly solved an open p
   
 This repo holds the example code for pruning DenseNet-40 on CIFAR-10. 
 
-1. Install Tensorflow-gpu
+1. Install Tensorflow-gpu-1.11
 
 2. Prepare the CIFAR-10 dataset in tfrecord format. Please follow https://github.com/tensorflow/models/blob/master/research/slim/datasets/download_and_convert_cifar10.py, download the CIFAR-10 dataset, convert it to tfrecord format, rename the two output files as train.tfrecords and validation.tfrecords, and modify the value of DATA_PATH in tf_dataset.py.
 
