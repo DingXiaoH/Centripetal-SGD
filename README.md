@@ -6,6 +6,8 @@ This repository contains the codes for the following CVPR-2019 paper
 
 The codes are based on Tensorflow 1.11.
 
+I will re-implement this using pytorch after finishing my pytorch experiment platform. Maybe in a month.
+
 Citation:
 
 	@article{ding2019centripetal,
