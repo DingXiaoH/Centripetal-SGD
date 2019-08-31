@@ -2,7 +2,7 @@
 
 This repository contains the codes for the following CVPR-2019 paper 
 
-[Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](https://arxiv.org/abs/1904.03837).
+[Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
 The codes are based on Tensorflow 1.11.
 
@@ -10,11 +10,12 @@ I will re-implement this using pytorch after finishing my pytorch experiment pla
 
 Citation:
 
-	@article{ding2019centripetal,
-		title={Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure},
-		author={Ding, Xiaohan and Ding, Guiguang and Guo, Yuchen and Han, Jungong},
-		journal={arXiv preprint arXiv:1904.03837},
-		year={2019}
+	@inproceedings{ding2019centripetal,
+  		title={Centripetal sgd for pruning very deep convolutional networks with complicated structure},
+  		author={Ding, Xiaohan and Ding, Guiguang and Guo, Yuchen and Han, Jungong},
+  		booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  		pages={4943--4953},
+  		year={2019}
 	}
 
 ## Introduction
