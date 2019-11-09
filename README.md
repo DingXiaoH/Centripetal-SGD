@@ -1,12 +1,12 @@
 # Centripetal-SGD
 
+Note: PyTorch implementation is in progress.
+
 This repository contains the codes for the following CVPR-2019 paper 
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
 The codes are based on Tensorflow 1.11.
-
-I will re-implement this using pytorch after finishing my pytorch experiment platform. Maybe in a month.
 
 Citation:
 
