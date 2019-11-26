@@ -75,6 +75,7 @@ def generate_decay_matrix_for_kernel_and_vecs(deps, layer_idx_to_clusters, kerne
         for clst in clusters:
             sc = sorted(clst)
             for ee in sc:
+                # Note: using smaller centripetal strength on the scaling factor of BN improve the performance in some of the cases
                 decay_trans_mat[ee, ee] = weight_decay + centri_strength * 0.1
                 for p in sc:
                     decay_trans_mat[ee, p] += -centri_strength * 0.1 / len(clst)
