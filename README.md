@@ -1,12 +1,14 @@
 # Centripetal-SGD
 
-Note: PyTorch implementation is in progress.
+Update: Pytorch implemenation released. 
+
+Note: The critical codes for C-SGD training (csgd/csgd_train.py) and pruning (csgd/csgd_prune.py) have been refactored and cleaned, such that the readability has significantly improved. The Tensorflow codes also work, but I would not suggest you read them. A little trick: using smaller centripetal strength on the scaling factor of BN improves the performance in some of the cases.
 
 This repository contains the codes for the following CVPR-2019 paper 
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
-The codes are based on Tensorflow 1.11.
+This demo will show you how to globally slim ResNet-56 and DenseNet-40 on CIFAR-10 in PyTorch and Tensorflow.
 
 Citation:
 
@@ -24,9 +26,32 @@ Filter pruning, a.k.a. network slimming or channel pruning, aims to remove some 
 loss, thus no finetuning is needed. By doing so, we have partly solved an open problem of constrained filter pruning on CNNs with complicated structure, where some layers must be pruned following others.
 
 
-## Example Usage
-  
-This repo holds the example code for pruning DenseNet-40 on CIFAR-10. 
+## PyTorch Example Usage
+
+We iteratively train a ResNet-56 (with 16-32-64 channels) and slim it into 13/16, 11/16 and 5/8 of the original width.
+
+1. Install PyTorch. Clone this repo and enter the directory. Modify PYTHONPATH or you will get an ImportError.
+```
+export PYTHONPATH='WHERE_YOU_CLONED_THIS_REPO'
+```
+
+2. Modify 'CIFAR10_PATH' in dataset.py to the directory of your CIFAR-10 dataset. If the dataset is not found in that directory, it will be automatically downloaded.
+
+3. Train the original ResNet-56 and iteratively slim it.
+```
+python csgd/csgd_rc56.py
+```
+
+4. Check the shape of pruned weights and the validation accuracy.
+```
+python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr0/pruned.hdf5
+python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr1/pruned.hdf5
+python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr2/pruned.hdf5
+cat csgd_exps/rc56_slim_5-8_csgd/itr2/log.txt
+```
+
+
+## Tensorflow Example Usage
 
 1. Install Tensorflow-gpu-1.11
 
