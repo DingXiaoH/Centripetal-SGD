@@ -1,8 +1,6 @@
 # Centripetal-SGD
 
-Update: Pytorch implementation released. Fixed a bug of Pytorch implementation in csgd/csgd_prune.py, which was related to pruning the last conv layer which is followed by an FC layer. This bug only resulted in an error if the last-layer feature maps were flattened as input to FC. For models with Global Average Pooling like ResNet-56, this bug was harmless.
-
-Note: The critical codes for C-SGD training (csgd/csgd_train.py) and pruning (csgd/csgd_prune.py) have been refactored and cleaned, such that the readability has significantly improved. The Tensorflow codes also work, but I would not suggest you read them. A little trick: using smaller centripetal strength on the scaling factor of BN improves the performance in some of the cases.
+Update: Pytorch implementation released. Fixed a bug of Pytorch implementation in csgd/csgd_prune.py, which was related to pruning the last conv layer which is followed by an FC layer. This bug only resulted in an error if the last-layer feature maps were flattened as input to FC. For models with Global Average Pooling like ResNet-56, this bug was harmless. The critical codes for C-SGD training (csgd/csgd_train.py) and pruning (csgd/csgd_prune.py) have been refactored and cleaned, such that the readability has significantly improved. The Tensorflow codes also work, but I would not suggest you read them. A little trick: using smaller centripetal strength on the scaling factor of BN improves the performance in some of the cases.
 
 This repository contains the codes for the following CVPR-2019 paper 
 
@@ -76,7 +74,9 @@ dxh17@mails.tsinghua.edu.cn
 
 Google Scholar Profile: https://scholar.google.com/citations?user=CIjw0KoAAAAJ&hl=en
 
-My open-sourced papers and repos:
+My open-sourced papers and repos: 
+
+**State-of-the-art** channel pruning (preprint, 2020): [Lossless CNN Channel Pruning via Gradient Resetting and Convolutional Re-parameterization](https://arxiv.org/abs/2007.03260) (https://github.com/DingXiaoH/ResRep)
 
 CNN component (ICCV 2019): [ACNet: Strengthening the Kernel Skeletons for Powerful CNN via Asymmetric Convolution Blocks](http://openaccess.thecvf.com/content_ICCV_2019/papers/Ding_ACNet_Strengthening_the_Kernel_Skeletons_for_Powerful_CNN_via_Asymmetric_ICCV_2019_paper.pdf) (https://github.com/DingXiaoH/ACNet)
 
