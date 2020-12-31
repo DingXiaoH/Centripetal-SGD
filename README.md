@@ -1,5 +1,7 @@
 # Centripetal-SGD
 
+2020/12/31: Will be updated in several days with multi-GPU pytorch implementation (Distributed Data Parallel) and pruning scripts on the standard torchvision ResNet-50 (76.15% accuracy). The results are pretty good.
+
 Update: Pytorch implementation released. Fixed a bug of Pytorch implementation in csgd/csgd_prune.py, which was related to pruning the last conv layer which is followed by an FC layer. This bug only resulted in an error if the last-layer feature maps were flattened as input to FC. For models with Global Average Pooling like ResNet-56, this bug was harmless. The critical codes for C-SGD training (csgd/csgd_train.py) and pruning (csgd/csgd_prune.py) have been refactored and cleaned, such that the readability has significantly improved. The Tensorflow codes also work, but I would not suggest you read them. A little trick: using smaller centripetal strength on the scaling factor of BN improves the performance in some of the cases.
 
 This repository contains the codes for the following CVPR-2019 paper 
