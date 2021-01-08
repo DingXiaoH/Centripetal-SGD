@@ -1,7 +1,7 @@
 from ndp_train import train_main
 import os
 from ndp_test import general_test
-from csgd.ddp_csgd_train import csgd_train_main
+from csgd.flops_scripts import csgd_train_main
 
 def csgd_prune_pipeline(local_rank, init_hdf5, base_train_config, csgd_train_config,
                         target_deps, centri_strength, pacesetter_dict, succeeding_strategy):

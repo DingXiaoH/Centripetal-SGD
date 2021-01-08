@@ -1,7 +1,7 @@
 from constants import *
 from base_config import get_baseconfig_by_epoch
 from model_map import get_dataset_name_by_model_name
-from rr.resrep_scripts import *
+from csgd.flops_scripts import *
 import argparse
 from csgd.csgd_pipeline import csgd_iterative
 
@@ -27,7 +27,6 @@ itr_target_deps_7060504030 = generate_itr_to_target_deps_by_schedule_vector(sche
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--arch', default='src56')
-    parser.add_argument('-t', '--try_arg', default=None)
     parser.add_argument('-c', '--conti_or_fs', default='fs')
     parser.add_argument('-i', '--begin_itr', default=0)
     parser.add_argument(
@@ -38,7 +37,6 @@ if __name__ == '__main__':
 
     network_type = start_arg.arch
     conti_or_fs = start_arg.conti_or_fs
-    try_arg = start_arg.try_arg
     assert conti_or_fs in ['continue', 'fs']
     auto_continue = conti_or_fs == 'continue'
     print('auto continue: ', auto_continue)
