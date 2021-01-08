@@ -1,14 +1,12 @@
 # Centripetal-SGD
 
-2020/12/31: Will be updated in several days with multi-GPU pytorch implementation (Distributed Data Parallel) and pruning scripts on the standard torchvision ResNet-50 (76.15% accuracy). The results are pretty good.
-
-Update: Pytorch implementation released. Fixed a bug of Pytorch implementation in csgd/csgd_prune.py, which was related to pruning the last conv layer which is followed by an FC layer. This bug only resulted in an error if the last-layer feature maps were flattened as input to FC. For models with Global Average Pooling like ResNet-56, this bug was harmless. The critical codes for C-SGD training (csgd/csgd_train.py) and pruning (csgd/csgd_prune.py) have been refactored and cleaned, such that the readability has significantly improved. The Tensorflow codes also work, but I would not suggest you read them. A little trick: using smaller centripetal strength on the scaling factor of BN improves the performance in some of the cases.
+2021/01/08: This new version supports pruning with multi-GPU training. Code for pruning the torchvision standard ResNet-50 is released. The old version is moved into the "deprecated" directory.
 
 This repository contains the codes for the following CVPR-2019 paper 
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
-This demo will show you how to globally slim ResNet-56 and DenseNet-40 on CIFAR-10 in PyTorch and Tensorflow.
+This demo will show you how to prune ResNet-50 on ImageNet with multiple GPUs (Distributed Data parallel) and ResNet-56 on CIFAR-10.
 
 Citation:
 
@@ -26,50 +24,42 @@ Filter pruning, a.k.a. network slimming or channel pruning, aims to remove some 
 loss, thus no finetuning is needed. By doing so, we have partly solved an open problem of constrained filter pruning on CNNs with complicated structure, where some layers must be pruned following others.
 
 
-## PyTorch Example Usage
+## PyTorch Example Usage: Pruning ResNet-50 with multiple GPUs.
 
-We iteratively train a ResNet-56 (with 16-32-64 channels) and slim it into 13/16, 11/16 and 5/8 of the original width.
+1. Enter this directory.
 
-1. Install PyTorch. Clone this repo and enter the directory. Modify PYTHONPATH or you will get an ImportError.
+2. Make a soft link to your ImageNet directory, which contains "train" and "val" directories.
 ```
-export PYTHONPATH='WHERE_YOU_CLONED_THIS_REPO'
-```
-
-2. Modify 'CIFAR10_PATH' in dataset.py to the directory of your CIFAR-10 dataset. If the dataset is not found in that directory, it will be automatically downloaded.
-
-3. Train the original ResNet-56 and iteratively slim it.
-```
-python csgd/csgd_rc56.py
+ln -s YOUR_PATH_TO_IMAGENET imagenet_data
 ```
 
-4. Check the shape of pruned weights and the validation accuracy.
+3. Set the environment variables.
 ```
-python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr0/pruned.hdf5
-python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr1/pruned.hdf5
-python display_hdf5.py csgd_exps/rc56_slim_5-8_csgd/itr2/pruned.hdf5
-cat csgd_exps/rc56_slim_5-8_csgd/itr2/log.txt
+export PYTHONPATH=.
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 ```
 
-
-## Tensorflow Example Usage
-
-1. Install Tensorflow-gpu-1.11
-
-2. Prepare the CIFAR-10 dataset in tfrecord format. Please follow https://github.com/tensorflow/models/blob/master/research/slim/datasets/download_and_convert_cifar10.py, download the CIFAR-10 dataset, convert it to tfrecord format, rename the two output files as train.tfrecords and validation.tfrecords, and modify the value of DATA_PATH in tf_dataset.py.
-
-3. Prune a DenseNet-40 to 3 filters per layer based on the magnitude of kernels and finetune it. Then evaluate the model.
-
+4. Download the official torchvision model, rename the parameters in our namestyle, and save the weights to "torchvision_res50.hdf5".
 ```
-python csgd_standalone.py magnitude1
-python csgd_standalone.py eval magnitude1_trained.hdf5
+python transform_torchvision.py
 ```
 
-4. Train a DenseNet-40 using C-SGD and trim it to obtain the same final structure. Then evaluate the model.
+5. Run Centripetal SGD to prune the internal layers of ResNet-50 to 70% of the original width, then 60%, then 50%, 40%, 30%.
+```
+python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 -i 0
+python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 -i 1
+python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 -i 2
+python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 -i 3
+python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 -i 4
+```
 
-```
-python csgd_standalone.py csgd1
-python csgd_standalone.py eval dc40_csgd1_itr0_prunedweights.hdf5
-```
+
+## PyTorch Example Usage: Pruning ResNet-56 on CIFAR-10
+
+We train a ResNet-56 (with 16-32-64 channels) and iteratively slim it into 13/16, 11/16 and 5/8 of the original width.
+
+TODO
+
 
 ## Contact
 dxh17@mails.tsinghua.edu.cn
