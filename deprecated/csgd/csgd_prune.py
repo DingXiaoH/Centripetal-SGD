@@ -1,7 +1,6 @@
 from collections import OrderedDict
 import numpy as np
 from utils.misc import save_hdf5
-from utils.engine import Engine
 
 def delete_or_keep(array, idxes, axis=None):
     if len(idxes) > 0:
@@ -18,7 +17,7 @@ def parse_succeeding_strategy(layer_idx_to_clusters, succeeding_strategy):
         succeeding_map = succeeding_strategy
     return succeeding_map
 
-def csgd_prune_and_save(engine:Engine, layer_idx_to_clusters, save_file, succeeding_strategy, new_deps):
+def csgd_prune_and_save(engine, layer_idx_to_clusters, save_file, succeeding_strategy, new_deps):
     result = OrderedDict()
 
     succeeding_map = parse_succeeding_strategy(succeeding_strategy=succeeding_strategy, layer_idx_to_clusters=layer_idx_to_clusters)
@@ -47,7 +46,7 @@ def csgd_prune_and_save(engine:Engine, layer_idx_to_clusters, save_file, succeed
 
         #   Prune the related vector params
         def handle_vecs(key_name):
-            vec_name = k_name.replace('conv.weight', key_name)      # Assume the names of conv kernel and bn params follow such a pattern.
+            vec_name = k_name.replace('conv.weight', key_name)
             vec_value = engine.get_param_value_by_name(vec_name)
             if vec_value is not None:
                 vec_value_pruned = delete_or_keep(vec_value, idx_to_delete)
@@ -75,22 +74,25 @@ def csgd_prune_and_save(engine:Engine, layer_idx_to_clusters, save_file, succeed
                 follow_kernel_value = result[follow_kernel_name]
             print('following kernel name: ', follow_kernel_name, 'origin shape: ', follow_kernel_value.shape)
 
-            if follow_kernel_value.ndim == 2:  # The following is a FC layer
+            if follow_kernel_value.ndim == 2:   # The following is a FC layer
                 fc_idx_to_delete = []
                 num_filters = k_value.shape[0]
                 fc_neurons_per_conv_kernel = follow_kernel_value.shape[1] // num_filters
                 print('{} filters, {} neurons per kernel'.format(num_filters, fc_neurons_per_conv_kernel))
+             
                 for clst in clusters:
                     if len(clst) == 1:
                         continue
                     for i in clst[1:]:
-                        fc_idx_to_delete.append(np.arange(i * fc_neurons_per_conv_kernel, (i + 1) * fc_neurons_per_conv_kernel))
+                        fc_idx_to_delete.append(np.arange(i * fc_neurons_per_conv_kernel,
+                                                          (i+1) * fc_neurons_per_conv_kernel))
                     to_concat = []
                     for i in clst:
-                        corresponding_neurons_idx = np.arange(i * fc_neurons_per_conv_kernel, (i + 1) * fc_neurons_per_conv_kernel)
+                        corresponding_neurons_idx = np.arange(i * fc_neurons_per_conv_kernel,
+                                                          (i+1) * fc_neurons_per_conv_kernel)
                         to_concat.append(np.expand_dims(follow_kernel_value[:, corresponding_neurons_idx], axis=0))
                     summed = np.sum(np.concatenate(to_concat, axis=0), axis=0)
-                    reserved_idx = np.arange(clst[0] * fc_neurons_per_conv_kernel, (clst[0] + 1) * fc_neurons_per_conv_kernel)
+                    reserved_idx = np.arange(clst[0] * fc_neurons_per_conv_kernel, (clst[0]+1) * fc_neurons_per_conv_kernel)
                     follow_kernel_value[:, reserved_idx] = summed
                 if len(fc_idx_to_delete) > 0:
                     follow_kernel_value = delete_or_keep(follow_kernel_value, np.concatenate(fc_idx_to_delete, axis=0), axis=1)
