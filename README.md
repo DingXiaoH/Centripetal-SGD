@@ -58,7 +58,25 @@ python -m torch.distributed.launch --nproc_per_node=8 csgd/do_csgd.py -a sres50 
 
 We train a ResNet-56 (with 16-32-64 channels) and iteratively slim it into 13/16, 11/16 and 5/8 of the original width.
 
-TODO
+1. Enter this directory.
+
+2. Make a soft link to your CIFAR-10 directory. If the dataset is not found in the directory, it will be automatically downloaded.
+```
+ln -s YOUR_PATH_TO_CIFAR cifar10_data
+```
+
+3. Set the environment variables.
+```
+export PYTHONPATH=.
+export CUDA_VISIBLE_DEVICES=0
+```
+
+4. Run Centripetal SGD to train a base ResNet-56, then globally slim it into 13/16, 11/16, 5/8 of the original width.
+```
+python csgd/do_csgd.py -a src56 -i 0
+python csgd/do_csgd.py -a src56 -i 1
+python csgd/do_csgd.py -a src56 -i 2
+```
 
 
 ## Contact
