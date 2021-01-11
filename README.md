@@ -1,12 +1,21 @@
 # Centripetal-SGD
 
-2021/01/08: This new version supports pruning with multi-GPU training. Code for pruning the torchvision standard ResNet-50 is released. The old version is moved into the "deprecated" directory.
+2021/01/08: This new version supports pruning with multi-GPU training. Code for pruning the torchvision standard ResNet-50 is released. The old version is moved into the "deprecated" directory. 
 
 This repository contains the codes for the following CVPR-2019 paper 
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
 This demo will show you how to prune ResNet-50 on ImageNet with multiple GPUs (Distributed Data parallel) and ResNet-56 on CIFAR-10.
+
+The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top1-accuracy=76.15%) are
+
+| Final width         | FLOPs reduction           | Top-1 accuracy  | Download |
+| ------------- |:------------:| -----:|
+| Original torchvision model	|-|	76.15 |		-|	
+| Internal layers 70%   | 36% 	|  	75.94 |		https://drive.google.com/file/d/1kFyc8xH2bRAi-e3v1iC529hTLBIVASGa/view?usp=sharing|
+| Internal layers 60%   | 46% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
+| Internal layers 50%   | 56% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
 
 Citation:
 
@@ -78,6 +87,9 @@ python csgd/do_csgd.py -a src56 -i 1
 python csgd/do_csgd.py -a src56 -i 2
 ```
 
+## How to customize the structure of the final network?
+
+For any conv net, the width of every conv layer is defined by deps.
 
 ## Contact
 dxh17@mails.tsinghua.edu.cn
