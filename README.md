@@ -87,9 +87,33 @@ python csgd/do_csgd.py -a src56 -i 1
 python csgd/do_csgd.py -a src56 -i 2
 ```
 
+## Download a pruned model, test, and use it for your own tasks
+
+Download any of the models above, and run
+```
+python ndp_test.py sres50 csgd_res50_internal70.hdf5
+```
+The model can be used for your own tasks like detection and segmentation as usual.
+
 ## How to customize the structure of the final network?
 
-For any conv net, the width of every conv layer is defined by deps.
+For any conv net, the width of every conv layer is defined by an array named "deps". For example, the original deps of ResNet-50 is
+```
+RESNET50_ORIGIN_DEPS_FLATTENED = [64,256,64,64,256,64,64,256,64,64,256,512,128,128,512,128,128,512,128,128,512,128,128,512,
+                                  1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,
+                                  2048,512, 512, 2048,512, 512, 2048,512, 512, 2048]
+```
+Note that we build the projection (1x1 conv shortcut) layer before the parallel residual block (L61 in stagewise_resnet.py), so that its width (256) preceds the widths of the three layers of the residual block (64, 64, 256). In do_csgd.py, "itr_deps" defines the target structure of the pruned model for each iteration. So if you want to customize the final width, say you want to prune every internal layer by 42% and the other troublesome layers by 39%, do something like this
+```
+final_deps = np.array(RESNET50_ORIGIN_DEPS_FLATTENED)
+for i in range(1, len(RESNET50_ORIGIN_DEPS_FLATTENED)):		# starts from 0 if you want to prune the first layer
+    if i in RESNET50_INTERNAL_KERNEL_IDXES:
+        final_deps[i] = int(0.58 * final_deps[i])
+    else:
+        final_deps[i] = int(0.61 * final_deps[i])
+itr_deps = [final_deps]		# if you want to do it in one iteration. You can define a series of deps to do it in several iterations, like "generate_itr_to_target_deps_by_schedule_vector".
+```
+
 
 ## Contact
 dxh17@mails.tsinghua.edu.cn
