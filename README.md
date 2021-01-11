@@ -11,7 +11,7 @@ This demo will show you how to prune ResNet-50 on ImageNet with multiple GPUs (D
 The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top1-accuracy=76.15%) are
 
 | Final width         | FLOPs reduction           | Top-1 accuracy  | Download |
-| ------------- |:------------:| -----:|
+| ------------- |:------------:| -----:| :------------:|
 | Original torchvision model	|-|	76.15 |		-|	
 | Internal layers 70%   | 36% 	|  	75.94 |		https://drive.google.com/file/d/1kFyc8xH2bRAi-e3v1iC529hTLBIVASGa/view?usp=sharing|
 | Internal layers 60%   | 46% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
