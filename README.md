@@ -15,7 +15,7 @@ The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top
 | Original torchvision model	|-|	76.15 |		-|	
 | Internal layers 70%   | 36% 	|  	75.94 |		https://drive.google.com/file/d/1kFyc8xH2bRAi-e3v1iC529hTLBIVASGa/view?usp=sharing|
 | Internal layers 60%   | 46% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
-| Internal layers 50%   | 56% 	|  	75.29 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
+| Internal layers 50%   | 56% 	|  	75.29 |		https://drive.google.com/file/d/1BndZeq3QkMOAE3wLfltt5SzCJwVF9PLV/view?usp=sharing|
 
 Citation:
 
