@@ -15,7 +15,7 @@ The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top
 | Original torchvision model	|-|	76.15 |		-|	
 | Internal layers 70%   | 36% 	|  	75.94 |		https://drive.google.com/file/d/1kFyc8xH2bRAi-e3v1iC529hTLBIVASGa/view?usp=sharing|
 | Internal layers 60%   | 46% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
-| Internal layers 50%   | 56% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
+| Internal layers 50%   | 56% 	|  	75.29 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
 
 Citation:
 
@@ -89,7 +89,7 @@ python csgd/do_csgd.py -a src56 -i 2
 
 ## Download a pruned model, test, and use it for your own tasks
 
-Download any of the models above, and run
+Download any of the models above, and run like
 ```
 python ndp_test.py sres50 csgd_res50_internal70.hdf5
 ```
@@ -103,7 +103,7 @@ RESNET50_ORIGIN_DEPS_FLATTENED = [64,256,64,64,256,64,64,256,64,64,256,512,128,1
                                   1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,256, 256, 1024,
                                   2048,512, 512, 2048,512, 512, 2048,512, 512, 2048]
 ```
-Note that we build the projection (1x1 conv shortcut) layer before the parallel residual block (L61 in stagewise_resnet.py), so that its width (256) preceds the widths of the three layers of the residual block (64, 64, 256). In do_csgd.py, "itr_deps" defines the target structure of the pruned model for each iteration. So if you want to customize the final width, say you want to prune every internal layer by 42% and the other troublesome layers by 39%, do something like this
+Note that we build the projection (1x1 conv shortcut) layer before the parallel residual block (L61 in stagewise_resnet.py), so that its width (256) preceds the widths of the three layers of the residual block (64, 64, 256). In do_csgd.py, "itr_deps" defines the target structure of the pruned model for each iteration. So if you want to customize the final width by pruning every internal layer by 42% and the other troublesome layers by 39%, do something like this
 ```
 final_deps = np.array(RESNET50_ORIGIN_DEPS_FLATTENED)
 for i in range(1, len(RESNET50_ORIGIN_DEPS_FLATTENED)):		# starts from 0 if you want to prune the first layer
