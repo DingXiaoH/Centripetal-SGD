@@ -6,9 +6,13 @@ This repository contains the codes for the following CVPR-2019 paper
 
 [Centripetal SGD for Pruning Very Deep Convolutional Networks with Complicated Structure](http://openaccess.thecvf.com/content_CVPR_2019/html/Ding_Centripetal_SGD_for_Pruning_Very_Deep_Convolutional_Networks_With_Complicated_CVPR_2019_paper.html).
 
+And the journal extension
+
+[Manipulating Identical Filter Redundancy for Efficient Pruning on Deep and Complicated CNN](https://arxiv.org/abs/2107.14444).
+
 This demo will show you how to prune ResNet-50 on ImageNet with multiple GPUs (Distributed Data parallel) and ResNet-56 on CIFAR-10.
 
-The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top1-accuracy=76.15%) are
+The results reproduced on the standard torchvision version of ResNet-50 (FLOPs=4.09B, top1-accuracy=76.15%) are
 
 | Final width         | FLOPs reduction           | Top-1 accuracy  | Download |
 | ------------- |:------------:| -----:| :------------:|
@@ -16,6 +20,8 @@ The results reproduced on the torchvision version of ResNet-50 (FLOPs=4.09B, top
 | Internal layers 70%   | 36% 	|  	75.94 |		https://drive.google.com/file/d/1kFyc8xH2bRAi-e3v1iC529hTLBIVASGa/view?usp=sharing|
 | Internal layers 60%   | 46% 	|  	75.80 |		https://drive.google.com/file/d/1_2tWF-St06KVj49c8yLrAlWUv8fv-LLk/view?usp=sharing|
 | Internal layers 50%   | 56% 	|  	75.29 |		https://drive.google.com/file/d/1BndZeq3QkMOAE3wLfltt5SzCJwVF9PLV/view?usp=sharing|
+
+These results are presented in the journal extension, not the CVPR version.
 
 Citation:
 
@@ -25,6 +31,15 @@ Citation:
   		booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
   		pages={4943--4953},
   		year={2019}
+	}
+	
+And
+
+	@article{ding2021manipulating,
+  		title={Manipulating Identical Filter Redundancy for Efficient Pruning on Deep and Complicated CNN},
+  		author={Ding, Xiaohan and Hao, Tianxiang and Han, Jungong and Guo, Yuchen and Ding, Guiguang},
+  		journal={arXiv preprint arXiv:2107.14444},
+  	year={2021}
 	}
 
 ## Introduction
